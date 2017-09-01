@@ -3,6 +3,7 @@ package com.cmos.smart4j.web.controller;
 import com.cmos.smart4j.framework.annotation.Action;
 import com.cmos.smart4j.framework.annotation.Controller;
 import com.cmos.smart4j.framework.annotation.Inject;
+import com.cmos.smart4j.framework.bean.Data;
 import com.cmos.smart4j.framework.bean.Param;
 import com.cmos.smart4j.framework.bean.View;
 import com.cmos.smart4j.web.service.HelloService;
@@ -25,6 +26,14 @@ public class HelloController {
         result.put("CurrentTime", String.valueOf(new Date()));
         result.put("KKKK", "AAAAAAA");
         return new View("index.jsp").addModel("result", "kkkkkkkkkkk");
+    }
+
+    @Action("get:getData")
+    public Data getData(Param param){
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("CurrentTime", String.valueOf(new Date()));
+        result.put("KKKK", "AAAAAAA");
+        return new Data(result);
     }
 
 
