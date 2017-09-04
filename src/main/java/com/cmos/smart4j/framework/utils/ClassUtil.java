@@ -19,16 +19,10 @@ public final class ClassUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
 
-    /**
-     * 获取类加载器
-     */
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 
-    /**
-     * 加载类
-     */
     public static Class<?> loadClass(String className, boolean isInitialized) {
         Class<?> cls;
         try {
@@ -41,16 +35,10 @@ public final class ClassUtil {
         return cls;
     }
 
-    /**
-     * 加载类（默认将初始化类）
-     */
     public static Class<?> loadClass(String className) {
         return loadClass(className, true);
     }
 
-    /**
-     * 获取指定包名下的所有类
-     */
     public static Set<Class<?>> getClassSet(String packageName) {
         LOGGER.debug("packageName is: " + packageName);
         Set<Class<?>> classSet = new HashSet<Class<?>>();
@@ -102,7 +90,6 @@ public final class ClassUtil {
         LOGGER.debug("addClass param packagePath is: " + packagePath);
         File[] files = new File(packagePath).listFiles(new FileFilter() {
             public boolean accept(File file) {
-                // 返回Class文件和目录
                 return (file.isFile() && file.getName().endsWith(".class")) || file.isDirectory();
             }
         });

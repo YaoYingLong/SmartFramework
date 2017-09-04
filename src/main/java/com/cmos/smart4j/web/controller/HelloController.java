@@ -22,14 +22,14 @@ public class HelloController {
     public View hello(Param param) {
         long id = param.getLong("id");
         System.out.println("id===" + id);
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("CurrentTime", String.valueOf(new Date()));
         result.put("KKKK", "AAAAAAA");
-        return new View("index.jsp").addModel("result", "kkkkkkkkkkk");
+        return new View("index.jsp", result).addModel("result", "ASASASASSS");
     }
 
-    @Action("get:getData")
-    public Data getData(Param param){
+    @Action("get:/getData")
+    public Data getData(){
         Map<String, String> result = new HashMap<String, String>();
         result.put("CurrentTime", String.valueOf(new Date()));
         result.put("KKKK", "AAAAAAA");

@@ -2,13 +2,8 @@ package com.cmos.smart4j.framework.bean;
 
 import java.lang.reflect.Method;
 
-/**
- * 分装Action信息
- */
 public class Handler {
-    //Controller 类
     private Class<?> controllerClass;
-    //Action 方法
     private Method actionMethod;
 
     public Handler(Class<?> controllerClass, Method actionMethod) {

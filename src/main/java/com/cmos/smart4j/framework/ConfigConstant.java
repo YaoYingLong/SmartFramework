@@ -1,8 +1,5 @@
 package com.cmos.smart4j.framework;
 
-/**
- * 提供相关配置项常量
- */
 public interface ConfigConstant {
 
     String CONFIG_FILE = "smart.properties";

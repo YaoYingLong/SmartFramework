@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Bean÷˙ ÷¿‡
- */
 public final class BeanHelper {
     private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<Class<?>, Object>();
 
@@ -29,5 +26,9 @@ public final class BeanHelper {
             throw new RuntimeException("can not get bean by class: " + cls);
         }
         return (T) BEAN_MAP.get(cls);
+    }
+
+    public static void setBean(Class<?> cls, Object obj) {
+        BEAN_MAP.put(cls, obj);
     }
 }

@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * 流操作工具类
- */
 public final class StreamUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);

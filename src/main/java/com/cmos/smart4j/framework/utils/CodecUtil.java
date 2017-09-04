@@ -7,9 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-/**
- * 编码与解码操作工具类
- */
 public final class CodecUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodecUtil.class);

@@ -3,9 +3,6 @@ package com.cmos.smart4j.framework.bean;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-/**
- * 封装请求信息
- */
 public class Request {
 
     private String requestMethod;
