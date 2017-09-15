@@ -1,6 +1,5 @@
 package com.cmos.smart4j.framework.helper;
 
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,7 @@ public final class DatabaseHelper {
 
     private static ThreadLocal<Connection> CONNECTION_HOLDER = new ThreadLocal<Connection>();
 
-    public static void beginTransaction(){
+    public static void beginTransaction() {
         Connection conn = getConnection();
         try {
             conn.setAutoCommit(false);
@@ -25,7 +24,7 @@ public final class DatabaseHelper {
         }
     }
 
-    public static void commitTransaction(){
+    public static void commitTransaction() {
         Connection conn = getConnection();
         try {
             conn.commit();
@@ -38,7 +37,7 @@ public final class DatabaseHelper {
         }
     }
 
-    public static void rollbackTransaction(){
+    public static void rollbackTransaction() {
         Connection conn = getConnection();
         try {
             conn.rollback();

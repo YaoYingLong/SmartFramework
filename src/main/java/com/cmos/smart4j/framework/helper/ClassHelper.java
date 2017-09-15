@@ -54,8 +54,8 @@ public final class ClassHelper {
      */
     public static Set<Class<?>> getClassSetBySuper(Class<?> superClass) {
         Set<Class<?>> classSet = new HashSet<>();
-        for (Class<?> cls : CLASS_SET){
-            if (superClass.isAssignableFrom(cls) && !superClass.equals(cls)){
+        for (Class<?> cls : CLASS_SET) {
+            if (superClass.isAssignableFrom(cls) && !superClass.equals(cls)) {
                 classSet.add(cls);
             }
         }
@@ -65,10 +65,10 @@ public final class ClassHelper {
     /**
      * obtain all class with some one annotation under application package name
      */
-    public static Set<Class<?>> getClassSetByAnnotation(Class<? extends Annotation> annotationClass){
+    public static Set<Class<?>> getClassSetByAnnotation(Class<? extends Annotation> annotationClass) {
         Set<Class<?>> classSet = new HashSet<>();
-        for (Class<?> cls : CLASS_SET){
-            if(cls.isAnnotationPresent(annotationClass)){
+        for (Class<?> cls : CLASS_SET) {
+            if (cls.isAnnotationPresent(annotationClass)) {
                 classSet.add(cls);
             }
         }

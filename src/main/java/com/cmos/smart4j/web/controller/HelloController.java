@@ -22,6 +22,9 @@ public class HelloController {
     public View hello(Param param) {
         long id = param.getLong("id");
         System.out.println("id===" + id);
+
+        helloService.hello();
+
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("CurrentTime", String.valueOf(new Date()));
         result.put("KKKK", "AAAAAAA");
@@ -29,7 +32,7 @@ public class HelloController {
     }
 
     @Action("get:/getData")
-    public Data getData(){
+    public Data getData() {
         Map<String, String> result = new HashMap<String, String>();
         result.put("CurrentTime", String.valueOf(new Date()));
         result.put("KKKK", "AAAAAAA");

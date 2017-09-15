@@ -4,9 +4,7 @@ import com.cmos.smart4j.framework.bean.Data;
 import com.cmos.smart4j.framework.bean.Handler;
 import com.cmos.smart4j.framework.bean.Param;
 import com.cmos.smart4j.framework.bean.View;
-import com.cmos.smart4j.framework.helper.BeanHelper;
-import com.cmos.smart4j.framework.helper.ConfigHelper;
-import com.cmos.smart4j.framework.helper.ControllerHelper;
+import com.cmos.smart4j.framework.helper.*;
 import com.cmos.smart4j.framework.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,56 +43,87 @@ public class DispatcherServlet extends HttpServlet {
 
         ServletRegistration defaultServlet = servletContext.getServletRegistration("default");
         defaultServlet.addMapping(ConfigHelper.getProperty(ConfigConstant.APP_ASSET_PATH) + "*");
+
+        UploadHelper.init(servletContext);
         LOGGER.info("-----DispatcherServlet init method is end-----");
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.info("-----DispatcherServlet service method is start-----");
-        String requestMethod = request.getMethod().toLowerCase();
-        String requestPath = request.getPathInfo();
 
-        Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
-        if (handler != null) {
-            Class<?> controllerClass = handler.getControllerClass();
-            Object controllerBean = BeanHelper.getBean(controllerClass);
-            Map<String, Object> paramMap = this.buildMap(request);
-            Param param = new Param(paramMap);
-            Method actionMethod = handler.getActionMethod();
-            Object result = ReflectionUtil.invokeMethod(controllerBean, actionMethod);
+        ServletHelper.init(request, response);
 
-            if (result instanceof View) {
-                View view = (View) result;
-                String path = view.getPath();
-                LOGGER.debug("View path is: " + path);
-                if (StringUtil.isNotEmpty(path)) {
-                    if (path.startsWith("/")) {
-                        response.sendRedirect(request.getContextPath() + path);
-                    } else {
-                        Map<String, Object> model = view.getModel();
-                        for (Map.Entry<String, Object> entry : model.entrySet()) {
-                            request.setAttribute(entry.getKey(), entry.getValue());
-                        }
-                        String targetUrl = ConfigHelper.getProperty(ConfigConstant.APP_JSP_PATH) + path;
-                        LOGGER.debug("targetUrl path is: " + targetUrl);
-                        request.getRequestDispatcher(targetUrl).forward(request, response);
-                    }
+        try {
+            String requestMethod = request.getMethod().toLowerCase();
+            String requestPath = request.getPathInfo();
+
+            if (requestPath.equals("/favicon.ico")) {
+                return;
+            }
+
+            Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
+            if (handler != null) {
+                Class<?> controllerClass = handler.getControllerClass();
+                Object controllerBean = BeanHelper.getBean(controllerClass);
+
+                Param param;
+                if (UploadHelper.isMultipart(request)) {
+                    param = UploadHelper.createParam(request);
+                } else {
+                    param = RequestHelper.createParam(request);
                 }
-            } else if (result instanceof Data) {
-                Data data = (Data) result;
-                Object model = data.getModel();
-                if (model != null) {
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
-                    PrintWriter writer = response.getWriter();
-                    String json = JsonUtil.toJson(model);
-                    writer.write(json);
-                    writer.flush();
-                    writer.close();
+                Method actionMethod = handler.getActionMethod();
+                int paramCount = actionMethod.getParameterCount();
+                Object result;
+                if (paramCount == 0) {
+                    result = ReflectionUtil.invokeMethod(controllerBean, actionMethod);
+                } else {
+                    result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);
+                }
+
+                if (result instanceof View) {
+                    handleViewResult((View) result, request, response);
+                } else if (result instanceof Data) {
+                    handleDataResult((Data) result, request, response);
                 }
             }
+        } finally {
+            ServletHelper.destory();
         }
         LOGGER.info("-----DispatcherServlet service method is end-----");
+    }
+
+    private void handleViewResult(View result, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        View view = (View) result;
+        String path = view.getPath();
+        LOGGER.debug("View path is: " + path);
+        if (StringUtil.isNotEmpty(path)) {
+            if (path.startsWith("/")) {
+                response.sendRedirect(request.getContextPath() + path);
+            } else {
+                Map<String, Object> model = view.getModel();
+                for (Map.Entry<String, Object> entry : model.entrySet()) {
+                    request.setAttribute(entry.getKey(), entry.getValue());
+                }
+                String targetUrl = ConfigHelper.getProperty(ConfigConstant.APP_JSP_PATH) + path;
+                LOGGER.debug("targetUrl path is: " + targetUrl);
+                request.getRequestDispatcher(targetUrl).forward(request, response);
+            }
+        }
+    }
+
+    private void handleDataResult(Data data, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Object model = data.getModel();
+        if (model != null) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter writer = response.getWriter();
+            String json = JsonUtil.toJson(model);
+            writer.write(json);
+            writer.flush();
+            writer.close();
+        }
     }
 
     private Map<String, Object> buildMap(HttpServletRequest request) throws IOException {

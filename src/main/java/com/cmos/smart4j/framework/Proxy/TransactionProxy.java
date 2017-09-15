@@ -11,7 +11,7 @@ public class TransactionProxy implements Proxy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionProxy.class);
 
-    private static final ThreadLocal<Boolean> FLAG_HOLDER = new ThreadLocal<Boolean>(){
+    private static final ThreadLocal<Boolean> FLAG_HOLDER = new ThreadLocal<Boolean>() {
         @Override
         protected Boolean initialValue() {
             return false;
@@ -23,7 +23,7 @@ public class TransactionProxy implements Proxy {
         Object result;
         boolean flag = FLAG_HOLDER.get();
         Method method = proxyChain.getTargetMethod();
-        if (!flag && method.isAnnotationPresent(Transaction.class)){
+        if (!flag && method.isAnnotationPresent(Transaction.class)) {
             try {
                 FLAG_HOLDER.set(true);
                 DatabaseHelper.beginTransaction();

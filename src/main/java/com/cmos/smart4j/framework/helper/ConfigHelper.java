@@ -16,4 +16,8 @@ public final class ConfigHelper {
     public static String getProperty(String propertyName, String defaultValue) {
         return PropsUtil.getString(CONFIG_PROPS, propertyName, defaultValue);
     }
+
+    public static int getProperty(String propertyName, int defaultVlaue) {
+        return PropsUtil.getNumber(CONFIG_PROPS, propertyName, defaultVlaue);
+    }
 }
